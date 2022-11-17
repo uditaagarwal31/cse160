@@ -9,8 +9,20 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 
 ```{r}
 data1 <- read.csv("C:/Users/matts/Downloads/HuluRaw.csv", header=TRUE)
-data_cleaned <- subset(data1, select = c("show.canonical_name", "show.description", "show.episodes_count", "show.genres", "show.name", "show.rating", "show.seasons_count", "show.is_coppa", "show.company.name", "show.company.canonical_name",            "show.show_rollups.current.highest_rating",  "show.show_rollups.current.seasons_count", "show.show_rollups.current.released_at", "show.show_rollups.current.episodes_count", "show.show_rollups.subscriber.highest_rating"))
-head(data_cleaned)
+data_cleaned <- subset(data1, select = c("show.canonical_name", "show.description", "show.episodes_count","show.genre", "show.genres", "show.name", "show.rating", "show.seasons_count", "show.is_coppa", "show.company.name", "show.company.canonical_name",            "show.show_rollups.current.highest_rating",  "show.show_rollups.current.seasons_count", "show.show_rollups.current.released_at", "show.show_rollups.current.episodes_count"))
+#head(data_cleaned)
+
+data_cleaned$show.genres <- as.factor(data_cleaned$show.genres)
+data_cleaned$show.genre <- as.factor(data_cleaned$show.genre)
+
+data_cleaned$show.company.canonical_name <- as.factor(data_cleaned$show.company.canonical_name)
+data_cleaned$show.company.name <- as.factor(data_cleaned$show.company.name)
+
+data_cleaned$show.is_coppa <- as.factor(data_cleaned$show.is_coppa)
+
+data_cleaned$show.show_rollups.current.highest_rating <-as.factor(data_cleaned$show.show_rollups.current.highest_rating)
+
+data_cleaned$show.show_rollups.current.released_at <- as.Date(data_cleaned$show.show_rollups.current.released_at)
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
