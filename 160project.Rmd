@@ -23,6 +23,12 @@ data_cleaned$show.is_coppa <- as.factor(data_cleaned$show.is_coppa)
 data_cleaned$show.show_rollups.current.highest_rating <-as.factor(data_cleaned$show.show_rollups.current.highest_rating)
 
 data_cleaned$show.show_rollups.current.released_at <- as.Date(data_cleaned$show.show_rollups.current.released_at)
+
+rows <-dim(data_cleaned)[1]
+
+
+train <- data_cleaned[1:floor(rows*.8),]
+test <- data_cleaned[-(1:floor(rows*.8)),]
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
