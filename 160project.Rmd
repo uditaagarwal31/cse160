@@ -22,11 +22,25 @@ data_cleaned$show.is_coppa <- as.factor(data_cleaned$show.is_coppa)
 data_cleaned$show.show_rollups.current.highest_rating <-as.factor(data_cleaned$show.show_rollups.current.highest_rating)
 data_cleaned$show.show_rollups.current.released_at <- as.Date(data_cleaned$show.show_rollups.current.released_at)
 
+#View(data_cleaned)
+
+# removing duplicated values 
+data_cleaned <- data_cleaned[!duplicated(data_cleaned),] 
+#data_cleaned <- unique(data_cleaned, by = "show.canonical_name")
+View(data_cleaned)
+
+
+```
+
+```{r}
 rows <-dim(data_cleaned)[1]
 
 train <- data_cleaned[1:floor(rows*.8),]
 test <- data_cleaned[-(1:floor(rows*.8)),]
+```
 
+
+```{r}
 # linear regression model
 model.rating <- glm(show.rating ~ show.episodes_count + show.genre + show.seasons_count + show.is_coppa + show.show_rollups.current.highest_rating + show.show_rollups.current.seasons_count + show.show_rollups.current.released_at + show.show_rollups.current.episodes_count, data = train)
 
