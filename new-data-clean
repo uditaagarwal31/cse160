@@ -1,19 +1,20 @@
-```{r }
-
+options(scipen = 999)
 data0 <- read.csv("C:/Users/matts/OneDrive/Documents/cse160/project/movies.csv", header = TRUE)
 
 data0 <- subset(data0, select = -released)
 
 data <-na.omit(data0)
+data <- data[!(data$rating ==""),]
 data$rating <- as.factor(data$rating)
 data$genre <- as.factor(data$genre)
-data$year <- as.factor(data$year)
+#data$year <- as.factor(data$year)
 data$director <- as.factor(data$director)
 data$writer <- as.factor(data$writer)
 data$star <- as.factor(data$star)
 data$country <- as.factor(data$country)
 data$company <- as.factor(data$company)
-
+# 72 levels of score
+#data$score <- as.factor(data$score)
 
 
 rows <-dim(data)[1]
@@ -21,5 +22,3 @@ rows <-dim(data)[1]
 
 train <- data[1:floor(rows*.8),]
 test <- data[-(1:floor(rows*.8)),]
-
-```
