@@ -40,7 +40,6 @@ test <- data[-(1:floor(rows*.8)),]
 ```
 
 ```{r}
-
 library(randomForest)
 library(rpart)
 
@@ -63,6 +62,29 @@ mse <- mean((test$score - forest.train)^2)
 mse
 
 ```
+
+```{r}
+library(ggplot2)
+
+# visualize variable importance
+# get variable importance from the model fit
+imp_data <- as.data.frame(importance(forest))
+imp_data$var_names <- row.names(imp_data)
+
+ggplot(imp_data, aes(x=var_names, y=`%IncMSE`)) +
+  geom_segment( aes(x=var_names, xend=var_names, y=0, yend=`%IncMSE`), color="skyblue") +
+  geom_point(aes(size = IncNodePurity), color="blue", alpha=0.6) +
+  theme_light() + 
+  coord_flip() +
+  theme(
+    legend.position="bottom",
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank()
+  ) + labs(title = "% Increase in MSE Affected by Variable", y = "% Increase in MSE", x = "Variable Names")
+
+```
+
 
 ## Including Plots
 
