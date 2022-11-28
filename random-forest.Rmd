@@ -1,0 +1,73 @@
+---
+title: "random-forest"
+author: "Niija Douglas"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+options(scipen = 999)
+
+data0 <- read.csv("movies.csv", header = TRUE)
+
+data0 <- subset(data0, select = -released)
+
+data <-na.omit(data0)
+data <- data[!(data$rating ==""),]
+data$rating <- as.factor(data$rating)
+data$genre <- as.factor(data$genre)
+#data$year <- as.factor(data$year)
+data$director <- as.factor(data$director)
+data$writer <- as.factor(data$writer)
+data$star <- as.factor(data$star)
+data$country <- as.factor(data$country)
+data$company <- as.factor(data$company)
+# 72 levels of score
+#data$score <- as.factor(data$score)
+
+
+rows <-dim(data)[1]
+
+
+train <- data[1:floor(rows*.8),]
+test <- data[-(1:floor(rows*.8)),]
+```
+
+```{r}
+
+library(randomForest)
+library(rpart)
+
+# build decision forest
+forest <- randomForest(score ~  genre + year + votes + budget + gross + runtime , data=train, importance = TRUE, ntree = 1000, na.action=na.roughfix)
+
+forest.train <- predict(forest, newdata=test)
+
+# model accuracy 
+actuals_preds <- data.frame(cbind(actuals = test$score, predicteds = forest.train))
+actuals_preds
+# correlation accuracy - model precision 
+correlation_accuracy <- cor(test$score, forest.train)
+correlation_accuracy
+# mean absolute percentage error - want as low as possible 
+mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals)
+mape
+# mean squared error - want as low as possible
+mse <- mean((test$score - forest.train)^2)
+mse
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
