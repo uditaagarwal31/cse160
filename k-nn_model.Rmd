@@ -1,0 +1,108 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+data0 <- read.csv("/Users/zaara/Downloads/Lehigh_Courses/Fall_22/CSE160/Final_Project/movies.csv", header = TRUE)
+
+data0 <- subset(data0, select = -released)
+
+data <-na.omit(data0)
+data$rating <- as.factor(data$rating)
+data$genre <- as.factor(data$genre)
+data$year <- as.factor(data$year)
+data$director <- as.factor(data$director)
+data$writer <- as.factor(data$writer)
+data$star <- as.factor(data$star)
+data$country <- as.factor(data$country)
+data$company <- as.factor(data$company)
+
+data
+
+rows <-dim(data)[1]
+
+
+train <- data[1:floor(rows*.8),]
+test <- data[-(1:floor(rows*.8)),]
+```
+```{r}
+m <- dim(data)[1] # returns the size of the first dimension
+m
+```
+
+
+```{r}
+val <- sample(1:m, size=round(m/3), replace=FALSE, prob = rep(1/m, m))
+val
+```
+
+
+```{r}
+# data.train <- data[-val,]; 
+# data.test <- data[val,]
+# 
+# data.test
+# dim(data.train)
+# dim(data.test)
+```
+
+```{r}
+#Use training data in k-NN to predict score in test data
+library(kknn)
+library(caret)
+
+# fit <- fitted(data.knn)
+# data.kknn <- kknn(score ~ genre + year + votes + budget + gross + runtime, data.train, data.test, distance = 2)
+# summary(data.kknn)
+
+data.knn = kknn(score ~ genre + year + votes + budget + gross + runtime, train, test, distance =2)
+#data
+```
+
+```{r}
+fit <- fitted(data.knn)
+#table <- table(fit, test$score )
+
+
+```
+
+
+```{r}
+#calculate accuracies
+#accuracy.datatest = sum(diag(table))/sum(table) 
+#cat("Mean kknn test accuracy: ", accuracy.datatest, "\n")
+#pred.value <- predict(data.knn, data.test)
+
+actuals_preds <- data.frame(cbind(actuals=test$score, predicteds = fit))
+corr_acc <- cor(actuals_preds$actuals, actuals_preds$predicteds)
+corr_acc
+
+mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals)
+mape # want as low as possible
+mse <- mean((test$score-pred.value)^2)
+mse # want as low as possible
+
+#previous accuracy: 0.0005518764 
+#new accuracy with knnreg: 
+```
+
+
+```{r}
+pcol <- as.character(as.numeric(data.test$score))
+pairs(data.test[1:4], pch=pcol, col=c("green3", "red")[(data.test$score != fit)+1])
+head(data.test$score)
+#head(fit)
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
