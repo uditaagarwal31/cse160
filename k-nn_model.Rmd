@@ -1,5 +1,6 @@
 ---
-title: "R Notebook"
+title: "KNN Regression Model "
+author : "Zaara Yakub"
 output: html_notebook
 ---
 
