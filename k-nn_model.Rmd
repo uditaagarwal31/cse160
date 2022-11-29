@@ -65,7 +65,7 @@ library(kknn)
 library(caret)
 
 # fit <- fitted(data.knn)
-# data.kknn <- kknn(score ~ genre + year + votes + budget + gross + runtime, data.train, data.test, distance = 2)
+# data.kknn <- kknn(score ~ genre + year + votes + budget + gross + runtime, data.train, data.test, k = 10, distance = 2)
 # summary(data.kknn)
 
 data.knn = kknn(score ~ genre + year + votes + budget + gross + runtime, train, test, distance =2)
